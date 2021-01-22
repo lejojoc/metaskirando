@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
   require_once('./settings.inc.php');
 
 	$myregs = $_COOKIE['myregs'];
@@ -23,16 +22,16 @@
 	extract($_GET);		// php 5
 
 	$time = time();
-	unset( $last_sktr, $last_volo, $last_bivk, $last_skrd );
+	unset( $last_sktr, $last_volo, $last_bivk, $last_skrd, $last_gipf );
 // les dernieres sorties sont stockees dans 'last' pour 2 jours.
 	$last_sktr = trim(@file_get_contents($SETTINGS['odir'] . '/skitour.last'));
 	$last_volo = trim(@file_get_contents($SETTINGS['odir'] . '/volo.last'));
 	$last_bivk = trim(@file_get_contents($SETTINGS['odir'] . '/bivouak.last'));
 	$last_skrd = trim(@file_get_contents($SETTINGS['odir'] . '/c2c.last'));
-	$last_ohm  = trim(@file_get_contents($SETTINGS['odir'] . '/OHM.last'));
+	$last_gipf = trim(@file_get_contents($SETTINGS['odir'] . '/gipfelbuch.last'));
 // on efface le cookie 'last' pour le mettre a jour.
 	setcookie('last','',$time-1000);
-	setcookie('last',"sktr=$last_sktr&volo=$last_volo&bivk=$last_bivk&skrd=$last_skrd&ohm=$last_ohm",$time+48*3600);
+	setcookie('last',"sktr=$last_sktr&volo=$last_volo&bivk=$last_bivk&skrd=$last_skrd&gipf=$last_gipf",$time+48*3600);
 // les dernieres sorties vues sont stockees dans 'current' pour 5 min.
 	if (isset($_COOKIE['current']))
 	{
@@ -41,7 +40,7 @@
 		$last_volo = substr($items[1],strpos($items[1],'=')+1);
 		$last_bivk = substr($items[2],strpos($items[2],'=')+1);
 		$last_skrd = substr($items[3],strpos($items[3],'=')+1);
-		$last_ohm = substr($items[4],strpos($items[4],'=')+1);
+		$last_gipf = substr($items[4],strpos($items[4],'=')+1);
 	}
 	elseif (isset($_COOKIE['last']))
 	{
@@ -50,7 +49,7 @@
 		$last_volo = substr($items[1],strpos($items[1],'=')+1);
 		$last_bivk = substr($items[2],strpos($items[2],'=')+1);
 		$last_skrd = substr($items[3],strpos($items[3],'=')+1);
-		$last_ohm = substr($items[4],strpos($items[4],'=')+1);
+		$last_gipf = substr($items[4],strpos($items[4],'=')+1);
 		setcookie('current',$_COOKIE['last'],$time+15*60);
 	}
 
@@ -65,8 +64,9 @@
 <head>
 <title>Meta-Skirando</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1">
 <meta name="description" content="Le moteur de recherche du Ski de Rando. Les conditions de neige pour le ski de randonnée en France et ailleurs !" />
-<meta name="keywords" content="ski de rando, ski alpinisme, ski extrême, pente raide, alpes, pyrénées, neige, météo, skitour, skirando, blms, nimp crew, volopress, ohm chamonix, sngm, bivouak" />
+<meta name="keywords" content="ski de rando, ski alpinisme, ski extrême, pente raide, alpes, pyrénées, neige, météo, skitour, skirando, volopress, bivouak" />
 <link href="style.css" rel="stylesheet" type="text/css" />
 <link rel="alternate" type="application/rss+xml" title="Les dernieres sorties de ski de rando" href="ski_rss.php" />
 <link rel="search" type="application/opensearchdescription+xml" title="rechercher avec metaskirando" href="metaskirando.xml">
@@ -77,99 +77,75 @@
 
 <?php include 'menu.inc'; ?>
 
-<h1 style="text-align: center;"><small>Le moteur de recherche du Ski de
-Rando :<br>
-<small style="font-style: italic;">Passer plus de temps &agrave;
-surfer
-sur la neige que sur le net.</small></small><br>
-</h1>
+<h1 style="text-align: center;">Le moteur de recherche du Ski de Rando</h1>
+<h2 style="text-align: center;">Passer plus de temps &agrave; surfer sur la neige que sur le net.</span></h2>
 
 <?php
-
-require "sites.inc.php";
-
-//	echo "cookie 'last' = {$_COOKIE['last']}<br>";
-//	echo "cookie 'current' = {$_COOKIE['current']}<br>";
-
-
-//	update_OHM();
-//	update_SNGM();
-//	update_BLMS();
+	require "sites.inc.php";
+	
 	update_Bivouak();
 	update_Skitour();
 	update_Gulliver();
 	update_Skirando();
-//	update_NimpCrew();
+	update_Gipfelbuch();
 	update_Volopress();
-//	update_CAFisere();
-
-load_All($sorties);
-
-$regs = make_region_list($sorties);
-
-$nsorties = count($sorties);
+	
+	load_All($sorties);
+	
+	$regs = make_region_list($sorties);
+	$nsorties = count($sorties);
 
 ?>
 
-<p style="text-align: center;">Les <b><?php echo $nsorties; ?></b> derni&egrave;res sorties des principaux sites web de ski de randonn&eacute;e accessibles d'un seul coup d'oeil !<br>
-<!--
-<br /><span style="background: #ff99ff;"><big><b>Bug corrigé : </b></big>les <a href="prefs.php">filtres personnalisés</a> fonctionnent à nouveau</span>
--->
-<!--
-<br /><span style="background: #ff9999;"><big><b>[Nat'n'Co]</b></big> <b>Prochaine rando tractée le samedi 9 Fevrier, au Tabor de la Mure. RDV 8h30 au parking de Villard St-Honore</b> Pour être informé des futurs tractages, inscrivez-vous sur <a href="http://natnco.free.fr">Nat'n'Co</a></span>
-<br /><span style="background: #ff9999;"><big><b>Camptocamp.org est à nouveau correctement indexé + nouvelle <a href="Nivo.php#Par">nivose Parpaillon</a>.</b></big> et aussi un <b>plugin recherche pour firefox</b> proposé par un de nos lecteurs.<br> Pour l'installer cliquer sur l'icone de la barre de recherche, et ajouter "metaskirando" !</span>
--->
-<!--
-<br /><span style="background: #ff9999;"><big><b>nouvelle <a href="Nivo.php#Big">nivose Aiguillettes</a>.</b></big>
--->
-<br /><span style="background: #ff99ff;"><big><b>Nouvelle adresse pour metaskirando. Le reste est inchangé !</b></big>
-et aussi un <b>plugin recherche pour firefox</b> proposé par un de nos lecteurs.<br> Pour l'installer cliquer sur l'icone de la barre de recherche, et ajouter "metaskirando" !</span>
-</p>
-
-
-<div style="text-align:center;">
-<FORM method='get' name='search'>
-<table align='center'><tr bgcolor='#ccccff'>
-<td style="text-align:center; padding:5px 20px">
-	<i><b>K</b>ick <b>Z</b>eurch</i> : <INPUT title="recherche sur tous les champs (massif, itinéraire, auteur, date ...)" TYPE=text SIZE=20 NAME=str>
-	<INPUT TYPE=submit NAME="kz" VALUE="Quoi de neuf ?">
-</td><td style="text-align:center; padding: 5px 20px;">
-<input title="Seulement les pentes raides (a partir du niveau 4.1 ou D-)" type=checkbox name="raide" <?php if (isset($raide)) echo 'checked'; ?>>&nbsp;Pente&nbsp;raide.
-<?php
-	if (isset($_COOKIE['region']))
-	{	?>
-<br><input title="Seulement les sorties de mes régions." type=checkbox name="myregs" <?php if (isset($myregs)) echo 'checked'; ?>>&nbsp;Dans&nbsp;mes&nbsp;régions.
-<?php 
-	}	?>
-</td><td style="text-align:center; padding:5px 20px">
-<b> Massif : </b> <SELECT NAME="zon" onchange="document.forms['search'].submit()">
-<option value=''>
-<?php
-	if (isset($_COOKIE['region']))
-	{
-		foreach ( $_COOKIE['region'] as $nom => $key )
-			echo "<option value=\"$key\">* $nom </option>\n";
-	}
-
-	$r = count($regs);
-	for ($i=0;$i<$r;$i++)
-	{
-		$nom = $regs[$i]['nom'];
-		$nbr = $regs[$i]['nbr'];
-		$key = $regs[$i]['key'];
-		if ($nbr != 0)
-	  		echo "<option value=\"$key\">$nom ($nbr) </option>\n";
-	}
-?>
-	</SELECT>
-<!--
-<input TYPE=submit NAME="find" VALUE="Baaaaase !">
--->
-<br>
-	<a href="prefs.php">Définir mes régions</a>
-</td></tr>
-</table>
-</FORM></div>
+<div>
+	<FORM method='get' name='search' class="srch">
+		<div class="srchb">
+			<p><SELECT NAME="zon" onchange="document.forms['search'].submit()">
+					<option value=''>----- Tous les massifs ----</option>
+					<?php
+							$zn = $_GET['zon'];
+							if( strlen($zn) == 0) $zn="---- Tous les massifs ----";
+							if (isset($_COOKIE['region']))
+							{
+								foreach ( $_COOKIE['region'] as $nom => $key )
+									echo "<option value=\"$key\"";
+									if($key == $zn) { echo "selected='true'";}
+									echo ">* $nom </option>\n";
+							}
+						
+							$r = count($regs);
+							for ($i=0;$i<$r;$i++)
+							{
+								$nom = $regs[$i]['nom'];
+								$nbr = $regs[$i]['nbr'];
+								$key = $regs[$i]['key'];
+								if ($nbr != 0) {
+							  		echo "<option value=\"$key\"";
+									if($key == $zn) { echo "selected='true'";}
+									echo ">$nom ($nbr) </option>\n";		
+								}					
+							}
+					?>
+				</SELECT>
+			</p>
+		</div>
+		<div class="srchb">
+			<p><span style="white-space: nowrap;"><input style="vertical-align: middle;" title="Seulement les pentes raides (a partir du niveau 4.1 ou D-)" type=checkbox name="raide" id="raide" <?php if (isset($raide)) echo 'checked'; ?> onchange="document.forms['search'].submit()">
+			   <label for="raide">Pente raide</label></span>
+				<?php	if (isset($_COOKIE['region'])){	?>
+						<span style="white-space: nowrap;"><input style="vertical-align: middle;" title="Seulement les sorties de mes régions." type=checkbox name="myregs" id="myregs" <?php if (isset($myregs)) echo 'checked'; ?> onchange="document.forms['search'].submit()">
+					   <label for="myregs">Mes régions </label> <a href="prefs.php">(définir)</a></span>
+				<?php }	?>
+			</p>
+		</div>
+		<div class="srchb">
+			<p><span style="white-space: nowrap;">
+				<INPUT title="Recherche sur tous les champs (massif, itinéraire, auteur, date ...)" TYPE=text SIZE=20 NAME=str>
+				<INPUT TYPE=submit NAME="kz" VALUE="Filtrer"></span>
+			</p>
+		</div>
+	</FORM>
+</div>
 
 <?php
 
@@ -232,7 +208,9 @@ if (!empty($zon))
 			break;
 		}
 	}
-	echo "\n<h1>$reg_name</h1>\n";
+	$label = str_replace("&nbsp; ", "", $reg_name);
+	$label = str_replace("+ ", "", $label);
+	echo "\n<h1>$label</h1>\n";
 	
 	$n = count($sorties);
 	for($i = 0; $i < $n; $i++)
@@ -276,8 +254,8 @@ if (!empty($_GET['str']))
 
 if ($kz == 0)
 {
-	echo "\n<h2>Quoi de neuf ?</h2>\n";
-	$dmax = date('Y-m-d',time()-40*3600);
+	$dmax = date('Y-m-d',time()-240*3600);
+	echo "\n<h2>Quoi de neuf depuis 10 jours ?</h2>\n";
 
 	unset($found);
 	$nf = 0;
@@ -288,30 +266,15 @@ if ($kz == 0)
 		$site = $sorties[$i]['site'];
 		$id = $sorties[$i]['id'];
 		$date = $sorties[$i]['date'];
-/*
-		if ( (($site == 'volo')&&( strnatcmp($id,$last_volo) >0 )) || (($site == 'skitour')&&($id > $last_sktr)) || (($site == 'c2c')&&($id > $last_skrd)) || (($site == 'bivouak')&&($id > $last_bivk)) || (($site == 'OHM')&&($id > $last_ohm)) )
+		
+		if ($date >= $dmax)
 		{
 			$found[$nf] = $sorties[$i];
 			$nf++;
 		}
-		elseif ($date >= $dmax)
-		{
-			$found[$nf] = $sorties[$i];
-			$nf++;
-		}
-*/
-		$found[$nf] = $sorties[$i];
-		$nf++;
+
 	}
 
-/*
-	if ($nf > 30)
-	{
-		echo "<p>$nf nouvelles sorties, dont 30 affichées.</p>\n";
-		$found = array_slice($found,0,30);
-	}
-	else
-*/
 	if ($nf == 0)
 	{
 		rsort($sorties);
@@ -320,25 +283,25 @@ if ($kz == 0)
 	$sorties = &$found;
 }
 
-/*	$last_sktr = trim(file_get_contents('skitour.last'));
-	$last_volo = trim(file_get_contents('volopress.last'));
-	$last_bivk = trim(file_get_contents('bivouak.last'));
-	$last_skrd = trim(file_get_contents('skirando.last'));
-*/
+$n = count($sorties);
+?>
 
-//	echo "<p>last skitour: $last_sktr, skirando: $last_skrd, volo: $last_volo, biv: $last_bivk</p>";
+<p>Les <b><?php echo $n; ?></b> derni&egrave;res sorties des principaux sites web de ski de randonn&eacute;e.<br>
+</p>
+
+<?php
 
 if (isset($found))
 {
 	rsort($sorties);
-	echo "<center><table class='main'>\n";
+
+	echo "<table class='main'>\n";
 
 	$prevdate = 0;
-	$n = count($sorties);
 	for ($i=0;$i<$n;$i++)
 	{
 		$date = $sorties[$i]['date'];
-		$nom = $sorties[$i]['nom'];
+		$nom = mb_strimwidth($sorties[$i]['nom'],0,80,"...");
 		$site = $sorties[$i]['site'];
 		$reg = $sorties[$i]['reg'];
 		$part = $sorties[$i]['part'];
@@ -356,28 +319,20 @@ if (isset($found))
 				 break;
 			case 'skitour' : if ($id <= $last_sktr) { $trtag = '<tr>'; }
 				 break;
-			case 'OHM' : if ($id <= $last_ohm) { $trtag = '<tr>'; }
+			case 'gipfelbuch' : if ($id <= $last_gipf) { $trtag = '<tr>'; }
 				 break;
 			default: $trtag = '<tr>';
 		}
 
-		if ($date == $prevdate) {
-			$dtxt = '';
-		} else {
-			if ($i >= 100) break;	// trop de sorties ? on arête là !
-			$dtxt = $date;
+		if ($date <> $prevdate) {
+			echo "</table><p><br/><b>$date</b></p><table class='main'>";
 			$prevdate = $date;
+		} else {
+			if ($i >= 1000) break;	// trop de sorties ? on arête là !
+			$dtxt = $date;
 		}
 		
-		if ($site == 'gulliver')
-		{
-			$trad = 'http://babelfish.altavista.com/babelfish/tr?lp=it_fr&trurl=' . urlencode($lien);
-			echo "$trtag<td>$dtxt</td><td><a href=\"$lien\">$nom</a> [<a href=\"$trad\">FR</a>]</td><td><b>$reg</b></td><td>$cot</td><td><i> $part</i> [$site]</td></tr>\n";
-		}
-		else
-		{
-			echo "$trtag<td>$dtxt</td><td><a href=\"$lien\">$nom</a></td><td><b>$reg</b></td><td>$cot</td><td><i> $part</i> [$site]</td></tr>\n";
-		}
+		echo "$trtag<td><a href=\"$lien\">$nom</a></td><td><b>$reg</b></td><td>$cot</td><td><i> $part</i> [$site]</td></tr>\n";
 	}
 
 	echo '</table></center>';

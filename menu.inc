@@ -14,15 +14,13 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */ ?>
-<p class="menu"><span class="menu">
-<a href="index.php" title="Rechercher les dernières sorties de ski de rando !">Accueil</a> ||
-<a href="Nivo.php" title="Nivoses et Météo">Nivo & Météo</a> ||
-<a href="http://www.skitour.fr/webcams/" title="Webcams de stations de skis (skitour.fr)">Webcams Montagne</a> ||
-<a href="diffusion.php" title="Diffuser l'info sur votre site !">Diffusion</a> ||
-<!-- <a href="archeovolo.php" title="Rechercher une course chez Volopress (depuis 2001)">ArchéoVologie</a> || -->
-<a href="prefs.php" title="D&eacute;finir mes pr&eacute;f&eacute;rences et mes régions">Pr&eacute;f&eacute;rences</a>
-</span>
-</p>
+<div class="menu">
+<span class="menu"><a href="index.php" title="Rechercher les dernières sorties de ski de rando !">Accueil</a></span>
+<span class="menu"><a href="Nivo.php" title="Nivoses et Météo">Nivo & Météo</a></span>
+<span class="menu"><a target="autres" href="http://www.skitour.fr/webcams/" title="Webcams de stations de skis (skitour.fr)">Webcams</a></span>
+<span class="menu"><a href="diffusion.php" title="Diffuser l'info sur votre site !">Diffusion</a></span>
+<span class="menu"><a href="prefs.php" title="D&eacute;finir mes pr&eacute;f&eacute;rences et mes régions">Pr&eacute;f.</a></span>
+</div>
 
-<div style="position: absolute; top: 0px; right: 0px;"><img src="gfx/surf_small2.png"></div>
+<div style="position: absolute; top: 0px; right: 0px;z-index: -1;"><img src="gfx/surf_small2.png"></div>
 <div style="padding: 40px 50px; float: right;">&nbsp;</div>

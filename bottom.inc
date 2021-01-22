@@ -14,31 +14,23 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */ ?>
-<div style="margin: 5px; float: left bottom;"><a href="http://natnco.free.fr">
-	<img src="gfx/Natnco_LogoV1_xs.png" style="border: 0px solid ; width: 200px; height: 97px;" align="left"></a>
-	<div style="margin: 0px 0px 0px -120px; float: right;"><img src="gfx/ski_small.png"></div>
-
-<div style="text-align: center;"><small><br>
-<i>Sites index&eacute;s :</i> <a href="http://www.bivouak.net/">bivouak.net</a>, 
-	<!-- <a href="http://blms.free.fr/">BLMS</a>, -->
-	<!-- <a href="http://www.clubalpin-grenoble.com/crrandoski.php">CAF de l'Isère</a>, -->
-	<a href="http://www.camptocamp.org/">camptocamp.org (c2c)</a>,
-	<a href="http://www.gulliver.it/">gulliver.it</a>, 
-	<!-- <a href="http://www.ohm-chamonix.com/">ohm-chamonix.com</a>, -->
-	<!-- <a href="http://www.montagneinfo.net/">montagneinfo.net (SNGM)</a>, -->
-	<!-- <a href="http://nimp.crew.free.fr/">Nimp'Crew</a>, -->
-	<a href="http://www.skitour.fr/">Skitour</a>,
-	<a href="http://www.volopress.net/">Volopress</a>.
-<br>
-<i>D'autres sites devraient &ecirc;tre index&eacute;s ? Remarques ? suggestions ? faites-le savoir</i> : <img src="gfx/c2c_cour.png">
-
-</small>
+<div class="ftr">
+	<div>
+		<a target="autres" href="http://natnco.free.fr"><img src="gfx/Natnco_LogoV1_xs.png" style="border-style: none; width: 80%;"></a>
+	</div>
+	<div style="text-align: center; font-size: 70%">
+		<u>Sites index&eacute;s :</u> <a href="http://www.bivouak.net/">bivouak.net</a>, 
+			<a target="autres" href="http://www.camptocamp.org/">camptocamp.org (c2c)</a>,
+			<a target="autres" href="http://www.gulliver.it/">gulliver.it</a>, 
+			<a target="autres" href="http://www.skitour.fr/">Skitour</a>,
+			<a target="autres" href="http://www.volopress.net/">Volopress</a>.
+			<a target="autres" href="https://www.gipfelbuch.ch">Gipfelbuch.ch</a>.
+		<br>
+		<i>D'autres sites devraient &ecirc;tre index&eacute;s ? Remarques ? suggestions ? faites-le savoir sur le <a href="https://forum.camptocamp.org/" target="c2c">Forum camptocamp.org</a></i>
+	</div>
+	<div>
+		<img src="gfx/ski_small.png" style="border-style: none; width: 100%;">
+	</div>
 </div>
-</div>
-<script type="text/javascript">
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create','UA-2814179-4');ga('send','pageview',{'anonymizeIp': true});
-</script>
+
+

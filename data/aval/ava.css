@@ -1,0 +1,58 @@
+body {
+	font-family: sans-serif;
+	font-size: 12px;
+}
+.title {
+	font-weight: bold;
+	font-size: 1.1em;
+	text-align: center;
+}
+.subtitle {
+	font-weight: bold;
+	text-align: center;
+}
+.ava {
+	margin: auto;
+	max-width: 800;
+}
+ .ava > .link {
+	display: none;
+} 
+.ava > .rights {
+	display: none;
+}
+.updated, .published, .avalanchedate_event {
+	display: none;
+}
+.geolat, .geolong {
+	display: none;
+}
+.ava > .dccreator {
+	display: none;
+}
+.avalancheorientation::before {
+	content: "Orientation : ";
+}
+.avalancheorientation {
+	margin-top: 2px;
+	margin-bottom: 2px;	
+}
+.dcdate {
+	display: none;
+}
+.ava > .dclanguage {
+	display: none;
+}
+.ava > .dcrights {
+	display: none;
+}
+.entry {
+	margin: 5px;
+	border: 2px solid lightblue;
+	padding: 5px;
+}
+.entry .title {
+	background-color: lightblue;
+	margin: 2px;
+	font-size: 1em;
+}

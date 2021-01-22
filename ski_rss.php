@@ -21,7 +21,7 @@
 
 <channel>
 <title>Les dernières sorties de ski de rando</title>
-<link>http://metaskirando.free.fr/</link>
+<link>http://www.metaskirando.ovh/</link>
 <language>fr-FR</language>
 
 <?php
@@ -54,6 +54,8 @@
 			loadclean_cache('bivouak',$sorties);
 		if (stristr($site,'ohm'))
 			loadclean_cache('OHM',$sorties);
+		if (stristr($site,'gipf'))
+			loadclean_cache('gipfelbuch',$sorties);
 	}
 	
 	if (isset($_GET['days']))

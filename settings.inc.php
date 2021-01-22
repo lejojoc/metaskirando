@@ -1,4 +1,3 @@
 <?php
-
-$SETTINGS['odir'] = "/var/www/metaskirando.camptocamp.org/private/data";
+$SETTINGS['odir'] = __DIR__.'/data';
 ?>

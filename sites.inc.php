@@ -23,6 +23,7 @@ require_once('./settings.inc.php');
 	$dlim = date('Y-m-d',time()-31*24*3600);
 	$today = date('Y-m-d',time());
 	ignore_user_abort(TRUE);
+	$canDownload = true;
 
 //////////////
 // les sorties sont enregistrées par :
@@ -31,91 +32,83 @@ require_once('./settings.inc.php');
 
 function make_region_list(&$sorties)
 {
-$reg[] = array( 'nom' => '+ Savoies', 'key' => 'Aravis|Bornes|Bauges|Chablais|Fauci|Rouges|Blanc|Bianco|Giffre', 'nbr' => 0);
+	$reg[] = array( 'nom' => '+ Savoies', 'key' => 'Aravis|Bornes|Bauges|Chablais|Fauci|Rouges|Blanc|Bianco|Giffre|Savoie', 'nbr' => 0);
 	$reg[] = array( 'nom' => '&nbsp; Aravis - Bornes', 'nbr' => 0, 'key' => 'Aravis|Bornes' );
 	$reg[] = array( 'nom' => '&nbsp; Bauges', 'nbr' => 0, 'key' => 'Bauges' );
 	$reg[] = array( 'nom' => '&nbsp; Chablais - Faucigny - Aig.Rouges', 'nbr' => 0, 'key' => 'Chablais|Rouges|Fauci|Giffre' );
 	$reg[] = array( 'nom' => '&nbsp; Mont-Blanc', 'nbr' => 0, 'key' => 'Blanc|Bianco' );
-$reg[] = array( 'nom' => '+ Maurienne et Tarentaise', 'nbr' => 0, 'key' => 'Beaufort|lauz|Vanoise|Maurienne|Charbonnel|Cerces|Ambin|Thabor|Tarentaise|Alpes Gr' );
+	$reg[] = array( 'nom' => '+ Maurienne et Tarentaise', 'nbr' => 0, 'key' => 'Beaufort|lauz|Vanoise|Maurienne|Charbonnel|Cerces|Ambin|Thabor|Tarentaise|Alpes Gr' );
 	$reg[] = array( 'nom' => '&nbsp; Beaufortain', 'nbr' => 0, 'key' => 'Beaufort' );
 	$reg[] = array( 'nom' => '&nbsp; Vanoise-Lauzière', 'nbr' => 0, 'key' => 'Vanoise|lauz' );
 	$reg[] = array( 'nom' => '&nbsp; Charbonnel - Grées', 'nbr' => 0, 'key' => 'Charbonnel|Tarentaise|Maurienne|Alpes Gr' );
 	$reg[] = array( 'nom' => '&nbsp; Cerces - Thabor - Ambin', 'nbr' => 0, 'key' => 'Cerces|Thabor|Ambin|Maurienne' );
-$reg[] = array( 'nom' => '+ Autour de Grenoble', 'key' => 'Belledonne|Chartreuse|Vercors|Rousses|Taillefer|Mat.+sine|Beaumont', 'nbr' => 0 );
+	$reg[] = array( 'nom' => '+ Autour de Grenoble', 'key' => 'Belledonne|Chartreuse|Vercors|Rousses|Taillefer|Mat.+sine|Beaumont|Is.re|Is..re', 'nbr' => 0 );
 	$reg[] = array( 'nom' => '&nbsp; Belledonne', 'nbr' => 0, 'key' => 'Belledonne' );
 	$reg[] = array( 'nom' => '&nbsp; Chartreuse', 'nbr' => 0, 'key' => 'Chartreuse' );
 	$reg[] = array( 'nom' => '&nbsp; Rousses - Arves - Galibier', 'nbr' => 0, 'key' => 'Rousses|Arves|Galibier' );
 	$reg[] = array( 'nom' => '&nbsp; Taillefer - Matheysine', 'nbr' => 0, 'key' => 'Taillefer|Beaumont|Mat.+sine' );
 	$reg[] = array( 'nom' => '&nbsp; Vercors', 'nbr' => 0, 'key' => 'Vercors' );
-$reg[] = array( 'nom' => '+ Alpes du Sud', 'key' => 'Dign|Queyras|Parpaillon|Ubaye|Brian|Maritime|Mercantour|Baron|voluy|crins|valg|oisans|combeyn|champsaur|grasse|provence|du.Sud', 'nbr' => 0);
-	$reg[] = array( 'nom' => '&nbsp; Alpes Maritimes', 'nbr' => 0, 'key' => 'Maritime|Mercantour' );
+	$reg[] = array( 'nom' => '+ Alpes du Sud', 'key' => 'Dign|Queyras|Parpaillon|Ubaye|Brian|Maritime|Mercantour|Pelat|Baron|voluy|crins|valg|oisans|combeyn|champsaur|grasse|provence|du.Sud', 'nbr' => 0);
+	$reg[] = array( 'nom' => '&nbsp; Alpes Maritimes', 'nbr' => 0, 'key' => 'Maritime|Mercantour|Pelat' );
 	$reg[] = array( 'nom' => '&nbsp; Dévoluy', 'nbr' => 0, 'key' => 'voluy' );
 	$reg[] = array( 'nom' => '&nbsp; Ecrins', 'nbr' => 0, 'key' => 'crins|champsaur|valg|combeyn|oisans' );
 	$reg[] = array( 'nom' => '&nbsp; Préalpes de Provence', 'key' => 'Dign|Baron|grasse|prov', 'nbr' => 0);
 	$reg[] = array( 'nom' => '&nbsp; Queyras - Parpaillon - Ubaye', 'nbr' => 0, 'key' => 'Queyras|Parpaillon|Ubaye|Brian' );
-$reg[] = array( 'nom' => 'Corse', 'nbr' => 0, 'key' => 'Corse|Corsica' );
-$reg[] = array( 'nom' => 'Jura', 'nbr' => 0, 'key' => 'Jura' );
-$reg[] = array( 'nom' => 'Massif Central', 'nbr' => 0, 'key' => 'Massif Central' );
-//$reg[] = array( 'nom' => 'Pyrénées', 'nbr' => 0, 'key' => 'Pyr|Aig.etortes|Andorr.|Ari.ge|Aure|Capcir|Card.s|Cerdagne|Corbi.res|Conflent|Gavarnie|Maladeta|N.ouvielle|Ordesa|Posets' );
-$reg[] = array( 'nom' => 'Pyrénées', 'nbr' => 0, 'key' => 'Pyr|Pirine|Aig.etortes|Andorr|Ari.ge|Aure|Basque|B.arn|Bigorre|Cadi|Canigou|Cantabri|Capcir|Card.s|Catalo|Cerdagne|Conflent|Corbi.res|Couserans|Encantats|Euskadi|Gavarnie|Garrotxa|Gredos|Luchon|Maladeta|Mont.Perdu|Monte.Perdido|Navarr|N.ouvielle|de.Europa|Posets|Puigmal|Vasco' );
-$reg[] = array( 'nom' => 'Vosges', 'nbr' => 0, 'key' => 'Vosges' );
-$reg[] = array( 'nom' => '+ Suisse', 'nbr' => 0, 'key' => 'Bern|Vaudois|Urner|Glarner|Appenzell|ndner|Graub' );
-	$reg[] = array( 'nom' => '&nbsp; Alpes Bernoises/Fribourgeoises', 'nbr' => 0, 'key' => 'Bern|Fribourg' );
-	$reg[] = array( 'nom' => '&nbsp; Alpes Vaudoises', 'nbr' => 0, 'key' => 'Vaudois' );
+	$reg[] = array( 'nom' => 'Corse', 'nbr' => 0, 'key' => 'Corse|Corsica' );
+	$reg[] = array( 'nom' => 'Jura', 'nbr' => 0, 'key' => 'Jura' );
+	$reg[] = array( 'nom' => 'Massif Central', 'nbr' => 0, 'key' => 'Massif Central|Cantal|Puy-de-|Ard|Haute-Loire|Lozère|Aveyron|Gard' );
+	$reg[] = array( 'nom' => 'Pyrénées', 'nbr' => 0, 'key' => 'Pyr|Pirine|Aigüetortes|Andorr|Ariège|Aure|Basque|Béarn|Bearn|Bigorr|Cadi|Canigou|Cantabri|Capcir|Cardós|Catal|Cerdagne|Conflent|Corbières|Couserans|Encantats|Euskadi|Gavarnie|Garrotxa|Gredos|Luchon|Maladeta|Mont.Perdu|Monte.Perdido|Navarr|N.ouvielle|de.Europa|Posets|Puigmal|Vasco' );
+	$reg[] = array( 'nom' => 'Vosges', 'nbr' => 0, 'key' => 'Vosges' );
+	$reg[] = array( 'nom' => '+ Suisse', 'nbr' => 0, 'key' => 'Bern|Vaudois|Urner|Uranaises|Glarner|Appenzell|ndner|Oberland|Graub|Valdese|Waadt|Freib|Glaronaises|Grisons|Grigioni|Zentralschweiz|suisse' );
+	$reg[] = array( 'nom' => '&nbsp; Alpes Bernoises/Fribourgeoises', 'nbr' => 0, 'key' => 'Bern|Fribourg|Freib' );
+	$reg[] = array( 'nom' => '&nbsp; Alpes Vaudoises', 'nbr' => 0, 'key' => 'Vaudois|Valdese|Waadt' );
 	$reg[] = array( 'nom' => '&nbsp; Apenzeller', 'nbr' => 0, 'key' => 'Appenzell' );
-	$reg[] = array( 'nom' => '&nbsp; Bündner Oberland', 'nbr' => 0, 'key' => 'ndner' );
-	$reg[] = array( 'nom' => '&nbsp; Urner-Glarner Alpen', 'nbr' => 0, 'key' => 'Urner|Glarner' );
-	$reg[] = array( 'nom' => '&nbsp; Graubünden', 'nbr' => 0, 'key' => 'Graub' );
-$reg[] = array( 'nom' => 'Valais', 'nbr' => 0, 'key' => 'Valais|Pennin' );
-$reg[] = array( 'nom' => '+ Italie', 'nbr' => 0, 'key' => 'Italie|Paradis|Tici|Orobie|Adamello|Dolomiti|Giulie|Ortles|Cozi|Disgrazia' );
+	$reg[] = array( 'nom' => '&nbsp; Urner-Glarner Alpen', 'nbr' => 0, 'key' => 'Urner|Glarner|Glaronaises|Uranaises' );
+	$reg[] = array( 'nom' => '&nbsp; Graubünden', 'nbr' => 0, 'key' => 'Graub|Grisons|Grigioni|ndner|Oberland' );
+	$reg[] = array( 'nom' => 'Valais', 'nbr' => 0, 'key' => 'Valais|Pennin' );
+	$reg[] = array( 'nom' => 'Alpes Lépontines', 'nbr' => 0, 'key' => 'Lépontine|Lepontine|Tessin' );
+	$reg[] = array( 'nom' => '+ Italie', 'nbr' => 0, 'key' => 'Italie|Paradis|Tici|Orobie|Adamello|Dolomiti|Giulie|Ortles|Cozi|Disgrazia|Bergama|Ligur' );
 	$reg[] = array( 'nom' => '&nbsp; Adamello', 'nbr' => 0, 'key' => 'Adamello' );
 	$reg[] = array( 'nom' => '&nbsp; Cozie', 'nbr' => 0, 'key' => 'Cozi' );
 	$reg[] = array( 'nom' => '&nbsp; Dolomites', 'nbr' => 0, 'key' => 'Dolomit' );
 	$reg[] = array( 'nom' => '&nbsp; Engadin - Disgrazia', 'nbr' => 0, 'key' => 'Disgrazia' );
 	$reg[] = array( 'nom' => '&nbsp; Giulie', 'nbr' => 0, 'key' => 'Giulie' );
 	$reg[] = array( 'nom' => '&nbsp; Gran Paradiso', 'nbr' => 0, 'key' => 'Paradis' );
-	$reg[] = array( 'nom' => '&nbsp; Orobie', 'nbr' => 0, 'key' => 'Orobie' );
+	$reg[] = array( 'nom' => '&nbsp; Alpi Liguri', 'nbr' => 0, 'key' => 'Ligur' );
+	$reg[] = array( 'nom' => '&nbsp; Alpi e Prealpi Bergamasche', 'nbr' => 0, 'key' => 'Orobie|Bergama' );
 	$reg[] = array( 'nom' => '&nbsp; Ortles', 'nbr' => 0, 'key' => 'Ortles' );
 	$reg[] = array( 'nom' => '&nbsp; Tici', 'nbr' => 0, 'key' => 'Tici' );
-$r = count($reg);
-$r2 = 0;
-$n = count($sorties);
+	
+	$r = count($reg);
+	$r2 = 0;
+	$n = count($sorties);
+	$reg2 = array();
 
-$reg2 = array();
-
-// un premier scan pour obtenir les régions.
-	for ($i=0;$i<$n;$i++)
-	{
+	// un premier scan pour obtenir les régions.
+	for ($i=0;$i<$n;$i++) {
 		$reg_name = $sorties[$i]['reg'];
-
 		$j = 0; $found = FALSE;
-		while($j<$r)
-		{
-			if (eregi($reg[$j]['key'],$reg_name))
-			{
+		while($j<$r) {
+			if (eregi($reg[$j]['key'],$reg_name)) {
 				$reg[$j]['nbr'] ++;
 				$found = TRUE;
 			}
 			$j++;
 		}
-		if (!$found)
-		{
-			for($j=0; $j<$r2; $j++)
-			{
-				if (isset($reg2[$j]) && $reg2[$j]['key'] == $reg_name)
-				{
+		if (!$found) {
+			for($j=0; $j<$r2; $j++)	{
+				if (isset($reg2[$j]) && $reg2[$j]['key'] == $reg_name) {
 					$reg2[$j]['nbr'] ++;
 					$found = TRUE;
 					break;
 				}
 			}
-			if (!$found)
-				$reg2[$r2] = array( 'nom' => $reg_name, 'nbr' => 1, 'key' => $reg_name);
-				$r2++;
+			if (!$found) $reg2[$r2] = array( 'nom' => $reg_name, 'nbr' => 1, 'key' => $reg_name);
+			$r2++;
 		}
 	}
 
-// tri
+	// tri
 	if (count($reg2) != 0) {
 		sort($reg2);
 		return array_merge( $reg, $reg2 );
@@ -133,31 +126,29 @@ function load_cache($base,&$sorties)
 
 	if ($fd = @fopen($txt,'r')) {
 	while( !feof($fd) )
-	{
-		list($site, $id) = fscanf($fd, "%s %s\n");
-		list($date, $cot) = fscanf($fd, "%s %s\n");
-		$cot = str_replace('_',' ',$cot);
-		$nom = ucfirst(html_entity_decode(trim(fgets($fd,256)),ENT_QUOTES));
-		$lien = trim(fgets($fd,256));
-		$reg = html_entity_decode(trim(fgets($fd,256)),ENT_QUOTES);
-		$part = trim(fgets($fd,256));
-		
-		if ($date >= $dlim)
 		{
-			$sorties[] = array( 'date' => $date, 'nom' => $nom, 'reg' => $reg, 'site' => $site,
-				'part' => $part, 'lien' => $lien, 'cot' => $cot, 'id' => $id );
+			list($site, $id) = fscanf($fd, "%s %s\n");
+			list($date, $cot) = fscanf($fd, "%s %s\n");
+			$cot = str_replace('_',' ',$cot);
+			$nom = ucfirst(html_entity_decode(trim(fgets($fd,400)),ENT_QUOTES));
+			$lien = trim(fgets($fd,400));
+			$reg = html_entity_decode(trim(fgets($fd,400)),ENT_QUOTES);
+			$part = trim(fgets($fd,400));
+			
+			if ($date >= $dlim)
+			{
+				$sorties[] = array( 'date' => $date, 'nom' => $nom, 'reg' => $reg, 'site' => $site,
+					'part' => $part, 'lien' => $lien, 'cot' => $cot, 'id' => $id );
+			}
 		}
-	}
-	fclose($fd);
-//	if ($date < $dlim)
-//		array_pop($sorties);
+		fclose($fd);
 	}
 }
 
 function loadclean_cache($base,&$tmp)
 {
 	global $dlim;
-  global $SETTINGS;
+   global $SETTINGS;
 
 	$old = 0;
 	$istart = count($tmp);	// on sauve l'index de depart...
@@ -165,78 +156,69 @@ function loadclean_cache($base,&$tmp)
 	$ftmp = "$txt.tmp";
 	$list_id[] = '0';		// pour supprimer les eventuels doublons...
 
-	if ( (file_exists($ftmp)) && (time() > (@filemtime($ftmp) + 300)) )
-	{
-		@unlink($ftmp);		// efface le fichier tmp si ca fait trop longtemps...
-	}
+	// efface le fichier tmp si ca fait trop longtemps...
+	if ( (file_exists($ftmp)) && (time() > (@filemtime($ftmp) + 300))) @unlink($ftmp);	
 
-if ($fd = @fopen($txt,'r'))
-{
-	while( !feof($fd) )
-	{
-		list($site, $id) = fscanf($fd, "%s %s\n");
-		list($date, $cot) = fscanf($fd, "%s %s\n");
-		$nom = html_entity_decode(trim(fgets($fd,256)),ENT_QUOTES);
-		$lien = trim(fgets($fd,256));
-		$reg = html_entity_decode(trim(fgets($fd,256)),ENT_QUOTES);
-		$part = trim(fgets($fd,256));
-
-		if (($site != $base)&&(!feof($fd))) {	// erreur dans le fichier => reset requis !
-			fclose($fd);
-			@unlink($SETTINGS['odir'] . "/$base.last");
-			return;
-		}
-
-		$res = array_search($id,$list_id);
-		if (($date >= $dlim)&&($res === FALSE))
-		{
-			$list_id[] = $id;
-			$tmp[] = array( 'date' => $date, 'nom' => $nom, 'reg' => $reg, 'site' => $site,
-				'part' => $part, 'lien' => $lien, 'cot' => $cot, 'id' => $id );
-		}
-		else $old++;
-	}
-	fclose($fd);
-//	if ($date >= $dlim)
-//		array_pop($sorties);
-
-	$n = count($tmp);
-	if ( ($old*5) > ($n-$istart) )	// cleanup requis si 1/6 des sorties est p?im?.
-	{
-		if ( $fd = @fopen($ftmp,'x+') )	// cleanup en cours ?
-		{
-			for ($i=$istart; $i<$n; $i++)	// on commence ?l'index de d?art.
-			{
-				$site = $tmp[$i]['site'];	$id = $tmp[$i]['id'];
-				$date = $tmp[$i]['date'];	$cot = $tmp[$i]['cot'];
-				$nom = $tmp[$i]['nom'];
-				$lien = $tmp[$i]['lien'];
-				$reg = $tmp[$i]['reg'];
-				$part = $tmp[$i]['part'];
-				fwrite($fd,"$site $id\n$date $cot\n$nom\n$lien\n$reg\n$part\n");
+	if ($fd = @fopen($txt,'r')) {
+		while( !feof($fd) ) {
+			list($site, $id) = fscanf($fd, "%s %s\n");
+			list($date, $cot) = fscanf($fd, "%s %s\n");
+			$nom = html_entity_decode(trim(fgets($fd,400)),ENT_QUOTES);
+			$lien = trim(fgets($fd,400));
+			$reg = html_entity_decode(trim(fgets($fd,400)),ENT_QUOTES);
+			$part = trim(fgets($fd,400));
+			
+			if (($site != $base)&&(!feof($fd))) {	// erreur dans le fichier => reset requis !
+				fclose($fd);
+				@unlink($SETTINGS['odir'] . "/$base.last");
+				return;
 			}
-			fclose($fd);
-			unlink($txt);
-			rename($ftmp, $txt);
+	
+			$res = array_search($id,$list_id);
+			if (($date >= $dlim)&&($res === FALSE)) {
+				$list_id[] = $id;
+				$tmp[] = array( 'date' => $date, 'nom' => $nom, 'reg' => $reg, 'site' => $site,
+					'part' => $part, 'lien' => $lien, 'cot' => $cot, 'id' => $id );
+			}
+			else $old++;
+		}
+		fclose($fd);
+
+		$n = count($tmp);
+		if ( ($old*5) > ($n-$istart) )	// cleanup requis si 1/6 des sorties est p?im?.
+		{
+			if ( $fd = @fopen($ftmp,'x+') )	// cleanup en cours ?
+			{
+				for ($i=$istart; $i<$n; $i++)	// on commence ?l'index de d?art.
+				{
+					$site = $tmp[$i]['site'];	$id = $tmp[$i]['id'];
+					$date = $tmp[$i]['date'];	$cot = $tmp[$i]['cot'];
+					$nom = $tmp[$i]['nom'];
+					$lien = $tmp[$i]['lien'];
+					$reg = $tmp[$i]['reg'];
+					$part = $tmp[$i]['part'];
+					fwrite($fd,"$site $id\n$date $cot\n$nom\n$lien\n$reg\n$part\n");
+				}
+				fclose($fd);
+				unlink($txt);
+				rename($ftmp, $txt);
+			}
 		}
 	}
-}
 }
 
 function cleanup_cache($base)
 {
 	global $dlim;
-  global $SETTINGS;
+   global $SETTINGS;
 
 	$txt = $SETTINGS['odir'] . "/$base.txt";
 	load_cache($txt,$tmp);
 	$n = count($tmp);
 	$ftmp = "$txt.tmp";
-	
-	if ( $fd = @fopen($ftmp,'x+') )		// la base n'est pas déjç en train d'etre nettoyée ???
-	{
-		for ($i=0; $i<$n; $i++)
-		{
+	// la base n'est pas déjç en train d'etre nettoyée ???	
+	if ( $fd = @fopen($ftmp,'x+') ) {
+		for ($i=0; $i<$n; $i++)	{
 			$site = $tmp[$i]['site'];	$id = $tmp[$i]['id'];
 			$date = $tmp[$i]['date'];	$cot = $tmp[$i]['cot'];
 			$nom = $tmp[$i]['nom'];
@@ -253,34 +235,35 @@ function cleanup_cache($base)
 	return $fd;
 }
 
-function load_All( &$sorties )
-{
-	load_cache('nimpcrew',$sorties);
-	load_cache('SNGM',$sorties);
-//	load_cache('blms',$sorties);
+function load_All( &$sorties ) {
 	load_cache('gulliver',$sorties);
-	load_cache('CAF38',$sorties);
 	loadclean_cache('volo',$sorties);
 	loadclean_cache('skitour',$sorties);
 	loadclean_cache('c2c',$sorties);
 	loadclean_cache('bivouak',$sorties);
-	loadclean_cache('OHM',$sorties);
+	loadclean_cache('gipfelbuch',$sorties);
+
 }
 
 /// www.skitour.fr
 function update_Skitour($base = 'skitour')
 {
-  global $SETTINGS;
-
+  	global $SETTINGS;
+	global $canDownload;
+	
 	$web  = $SETTINGS['odir'] . "/$base.web";
 	$txt  = $SETTINGS['odir'] . "/$base.txt";
 	$last = $SETTINGS['odir'] . "/$base.last";
-	$expire = 10*60;		// en secondes.
+	$expire = 40*60;		// en secondes.
 	$ftmp = "$txt.tmp";
 
 	if (!file_exists($last)) {
 		reset_Skitour();
 		return TRUE;
+	}
+	if ((time() > (@filemtime($web) + $expire)) && $canDownload ) {
+		download_Skitour();
+		$canDownload = false;
 	}
 
 	// mise a jour du fichier $txt ...
@@ -312,18 +295,74 @@ function update_Skitour($base = 'skitour')
 	return TRUE;
 }
 
-/// www.volopress.net
-function update_Volopress($base = 'volo')
+/// www.Gipfelbuch.ch
+function update_Gipfelbuch($base = 'gipfelbuch')
 {
   global $SETTINGS;
+	global $canDownload;
 
 	$web  = $SETTINGS['odir'] . "/$base.web";
 	$txt  = $SETTINGS['odir'] . "/$base.txt";
 	$last = $SETTINGS['odir'] . "/$base.last";
-	$expire = 10*60;		// en secondes.
+	$expire = 40*60;		// en secondes.
+	$ftmp = "$txt.tmp";
+
+	if (!file_exists($last)) {
+		reset_gipfelbuch();
+		return TRUE;
+	}
+	
+	if ((time() > (@filemtime($web) + $expire)) && $canDownload)  {
+		download_Gipfelbuch();
+		$canDownload = false;
+	}
+
+	// mise a jour du fichier $txt ...
+	if (@filemtime($web) > @filemtime($last))	// ... si la date est atteinte ...
+	{
+	  if ( $fd = @fopen($ftmp,'x') )	// update en cours ?
+	  {
+		fclose($fd);
+		$textall = @file_get_contents($web);
+		if ($textall !== FALSE) // le site est HS ? on utilise le cache !
+		{
+			$last_id = (int) trim(@file_get_contents($last));
+			$new_id = parse_Gipfelbuch($textall,$last_id);
+			if ($new_id > $last_id)		// si on a du nouveau ...
+			{
+				$fd=@fopen($last,'w');	@fwrite($fd,$new_id);	@fclose($fd);
+				$fd=@fopen($txt,'a');
+				@flock($fd,LOCK_EX);
+				@fwrite($fd,$textall);
+				@fclose($fd);
+			}
+			else touch($last);
+		}
+		else touch($last);
+		unlink($ftmp);
+	  } elseif (time() > (@filemtime($ftmp) + 3600)) // efface le fichier tmp si ca fait trop longtemps...
+		@unlink($ftmp);
+	}
+	return TRUE;
+}
+/// www.volopress.net
+function update_Volopress($base = 'volo')
+{
+  global $SETTINGS;
+	global $canDownload;
+
+	$web  = $SETTINGS['odir'] . "/$base.web";
+	$txt  = $SETTINGS['odir'] . "/$base.txt";
+	$last = $SETTINGS['odir'] . "/$base.last";
+	$expire = 40*60;		// en secondes.
 	$ftmp = "$txt.tmp";
 
 	if (!file_exists($last)) @unlink($txt);
+	
+	if ((time() > (@filemtime($web) + $expire)) && $canDownload)  {
+		download_Volopress();
+		$canDownload = false;
+	}	
 
 	// mise a jour du fichier $txt ...
 	if (@filemtime($web) > @filemtime($last))	// ... si la date est atteinte ...
@@ -359,25 +398,30 @@ function update_Volopress($base = 'volo')
 function update_Skirando($base = 'c2c')
 {
   global $SETTINGS;
+	global $canDownload;
 
 	$web  = $SETTINGS['odir'] . "/$base.web";
 	$txt  = $SETTINGS['odir'] . "/$base.txt";
 	$last = $SETTINGS['odir'] . "/$base.last";
-	$expire = 10*60;		// en secondes.
+	$expire = 40*60;		// en secondes.
 	$ftmp = "$txt.tmp";
 
+	// reset du fichier $txt si pas de precedent-reset manuel
 	if (!file_exists($last)) {
 		reset_Skirando();
 		return TRUE;
 	}
-
-	// mise a jour du fichier $txt ...
-	if (@filemtime($web) > @filemtime($last))	// ... si la date est atteinte ...
+	// reset du fichier $txt si plus d'une heure
+	if ((time() > (@filemtime($web) + $expire)) && $canDownload)  {
+		download_Skirando();
+		$canDownload = false;
+	}
+	// mise a jour du fichier $txt si le cron est passe
+	if (@filemtime($web) > @filemtime($last))
 	{
 	  if ( $fd = @fopen($ftmp,'x') )	// update en cours ?
 	  {
 		fclose($fd);
-//		$textall = @file_get_contents('http://www.camptocamp.org/outings/list/1');
 		$textall = @file_get_contents($web);
 		if ($textall !== FALSE)
 		{
@@ -406,173 +450,42 @@ function update_Skirando($base = 'c2c')
 function update_Bivouak($base = 'bivouak')
 {
   global $SETTINGS;
-
+	global $canDownload;
 	$web  = $SETTINGS['odir'] . "/$base.web";
 	$txt  = $SETTINGS['odir'] . "/$base.txt";
 	$last = $SETTINGS['odir'] . "/$base.last";
-	$expire = 10*60;		// en secondes.
-
+	$expire = 40*60;		// en secondes.
+	
 	if (!file_exists($last)) @unlink($txt);
-
-	// mise a jour du fichier $txt ...
-	if (@filemtime($web) > @filemtime($last))	// ... si la date est atteinte ...
+	
+	if ((time() > (@filemtime($web) + $expire)) && $canDownload)  {
+		download_Bivouak();
+		$canDownload = false;
+		echo "<p style='text-align:right;font-style:italic;font-size:0.7em'>";
+		echo "Données mises à jour le ".date('D j F Y à G:i:s',time())."</p>";	
+	} else {
+		echo "<p style='text-align:right;font-style:italic;font-size:0.7em'>";
+		echo "Données mises à jour le ".date('D j F Y à G:i:s',@filemtime($web))."</p>";	
+	}
+	$textall = @file_get_contents($web);
+	if ($textall !== FALSE) // le site est HS, on utilise le cache.
 	{
-		$textall = @file_get_contents($web);
-		if ($textall !== FALSE) // le site est HS, on utilise le cache.
+		$last_id = file_get_contents($last);
+		if ($last_id == FALSE) {$last_id=0;}
+		$new_id = parse_Bivouak($textall,$last_id);
+		if ($new_id > $last_id)
 		{
-			$last_id = (int) trim(@file_get_contents($last));
-			$new_id = parse_Bivouak($textall,$last_id);
-			if ($new_id > $last_id)
-			{
-				$fd = @fopen($last,'w');	@fwrite($fd,$new_id);	@fclose($fd);
-				$fd=@fopen($txt,'a');
-				@flock($fd,LOCK_EX);
-				@fwrite($fd,$textall);
-				@fclose($fd);
-			}
-			else touch($last);
+			$fd = @fopen($last,'w');	@fwrite($fd,$new_id);	@fclose($fd);
 		}
 		else touch($last);
 	}
-	return TRUE;
-}
-
-/// www.ohm-chamonix.com
-function update_OHM($base = 'OHM')
-{
-  global $SETTINGS;
-
-	$txt  = $SETTINGS['odir'] . "/$base.txt";
-	$last = $SETTINGS['odir'] . "/$base.last";
-	$expire = 2*3600;		// 2 heures
-	$ftmp = "$txt.tmp";
-
-	if (!file_exists($last)) @unlink($txt);
-
-	// mise a jour du fichier $txt ...
-	if (@filemtime($web) > @filemtime($last))	// ... si la date est atteinte ...
-	{
-	  if ( $fd = @fopen($ftmp,'x') )	// update en cours ?
-	  {
-		fclose($fd);
-		$textall = @file_get_contents('http://www.ohm-chamonix.com/fiche.php?id=01&ling=Fr');
-		if ($textall !== FALSE) // le site est HS, on utilise le cache.
-		{
-			$last_id = (int) trim(@file_get_contents($last));
-			$new_id = parse_OHM($textall,$last_id);
-			$last_id = trim(@file_get_contents($last));		// relis le last_id, parse_xxx a pris du temps !
-			if ($new_id > $last_id)
-			{
-				$fd = @fopen($last,'w');	@fwrite($fd,$new_id);	@fclose($fd);
-				$fd=@fopen($txt,'a');
-				@flock($fd,LOCK_EX);
-				fwrite($fd,$textall);
-				@fclose($fd);
-			}
-			else touch($last);
-		}
-		else touch($last);
-		unlink($ftmp);
-	  } elseif (time() > (@filemtime($ftmp) + 3600)) // efface le fichier tmp si ca fait trop longtemps...
-		@unlink($ftmp);
-	}
+	else touch($last);
 	return TRUE;
 }
 
 ///////// RSS FUNCTIONS ////////////
 
-// nimp.crew.free.fr
-function update_NimpCrew($base = 'nimpcrew')
-{
-  global $SETTINGS;
 
-	$txt = $SETTINGS['odir'] . "/$base.txt";
-	$expire = 30*60;	// en secondes.
-	$cur_month = date('m');	$cur_year = date('Y');
-	
-	if (@filemtime($web) > @filemtime($txt))
-	{
-		$textall = @file_get_contents('http://nimp.crew.free.fr/last10_rss.php');
-		if ($textall !== FALSE)
-		{
-			$entries = explode('</item>',substr($textall,strpos($textall,'<item>')));
-			$n = count($entries) - 1;
-			$textall = '';
-			for($i = 0; $i< $n; $i++)
-			{
-				$entry = explode('</',$entries[$i]);
-				unset($regs);
-				ereg('\[([^,]*), ([0-5].[1-9])',$entry[2],$regs); $reg = $regs[1]; $cot = $regs[2];
-				if ($regs[2])
-				{
-					$lien = substr($entry[1],strpos($entry[1],'<link>')+6);
-					$nom = substr($entry[0],strpos($entry[0],' ')+1);
-					ereg('([0-9]{1,2}).([0-9]{1,2})',$entry[0],$regs);
-					
-					if (($regs[2]) > $cur_month) {
-						$date = ($cur_year-1) . sprintf("-%02d-%02d",$regs[2],$regs[1]);
-					}	else	{
-						$date = sprintf("$cur_year-%02d-%02d",$regs[2],$regs[1]);
-					}
-					$textall .= "NimpCrew\n$date $cot\n$nom\n$lien\n$reg\n\n";
-				}
-			}
-			$fd=@fopen($txt,'w');
-			@flock($fd,LOCK_EX);
-			@fwrite($fd,$textall);
-			@fclose($fd);
-		}
-		else touch($txt);
-	}
-	return TRUE;
-}
-
-// blms.free.fr
-function update_BLMS($base = 'blms')
-{
-	global $dlim;
-  global $SETTINGS;
-
-	$txt = $SETTINGS['odir'] . "/$base.txt";
-	$expire = 60*60;	// en secondes.
-	
-	if (@filemtime($web) > @filemtime($txt))
-	{
-		$textall = @file_get_contents('http://blms.free.fr/Dev_MBO/meta_nat.php');
-		if ($textall !== FALSE)
-		{
-			$entries = explode('</tr>',$textall);
-			$n = count($entries) - 2;
-			$textall = '';
-			for($i = 1; $i< $n; $i++)
-			{
-				$items = explode('</td>',$entries[$i]);
-				$date = trim(strip_tags($items[0]));
-				if ($date > $dlim)
-				{
-					$part = trim(strip_tags($items[1]));
-					$reg = trim(strip_tags($items[2]));
-					$nom = trim(strip_tags($items[3]));
-					$cot = trim(strip_tags($items[4]));
-					unset($regs);
-					ereg('href="([^"]+)',$items[7],$regs);
-					if ($regs[1]) {
-						$lien = $regs[1];
-					} else {
-						$lien = 'http://blms.free.fr/Dev_MBO/liste.php?type1=ski';
-					}
-					$textall .= "BLMS\n$date $cot\n$nom\n$lien\n$reg\n$part\n";
-				}
-			}
-			$fd=@fopen($txt,'w');
-			@flock($fd,LOCK_EX);
-			@fwrite($fd,$textall);
-			@fclose($fd);
-		}
-		else touch($txt);
-	}
-	return TRUE;
-}
 
 function get_mois($mois)
 {
@@ -597,94 +510,23 @@ function get_mois($mois)
 	return $m;
 }
 
-// CAF Isere
-function update_CAFisere($base = 'CAF38')
-{
-	global $dlim;
-  global $SETTINGS;
-
-	$web = $SETTINGS['odir'] . "/$base.web";
-	$txt = $SETTINGS['odir'] . "/$base.txt";
-	$expire = 60*60;	// en secondes.
-	
-	if (@filemtime($web) > @filemtime($txt))
-	{
-		$textall = @file_get_contents($web);
-		if ($textall !== FALSE)
-		{
-			$entries = explode('<td colspan="2" class="normal">',$textall);
-			$n = count($entries) -1;
-			$textall = '';
-			for($i = 1; $i< $n; $i++)
-			{
-				$p1 = strpos($entries[$i],'<strong>');
-				$date = trim(strip_tags(substr($entries[$i],0,$p1)));
-				$p2 = strpos($entries[$i],'</b>',$p1);
-				$other = substr($entries[$i],$p1,$p2);
-				$items = explode(' ',$date);
-				$mois = get_mois($items[2]);
-				$date = "{$items[3]}-$mois-{$items[1]}";
-				if ($date > $dlim)
-				{
-					$items = explode('-',$other);
-					$nom = trim(strip_tags($items[0]));
-					$reg = trim(strip_tags($items[1]));
-					$cot = trim(strip_tags($items[2]));
-					$cot = trim($cot,'() ');
-					$lien = "http://www.clubalpin-grenoble.com/crrandoski.php";
-					$textall .= "CAF38\n$date $cot\n$nom\n$lien\n$reg\n\n";
-				}
-			}
-			$fd=@fopen($txt,'w');
-			@flock($fd,LOCK_EX);
-			@fwrite($fd,$textall);
-			@fclose($fd);
-		}
-		else touch($txt);
-	}
-}
-
-function update_SNGM($base = 'SNGM')
-{
-  global $SETTINGS;
-
-	$web = $SETTINGS['odir'] . "/$base.web";
-	$txt = $SETTINGS['odir'] . "/$base.txt";
-	$expire = 60*60;	// en secondes.
-	$ftmp = "$txt.tmp";
-	
-	if ( @filemtime($web) > @filemtime($txt))
-	{
-		if ( $fd = @fopen($ftmp,'x+') )
-		{
-			$textall = @file_get_contents($web);
-			if ($textall !== FALSE)
-			{
-				parse_SNGM($textall);
-				fwrite($fd,$textall);
-				fclose($fd);
-				@unlink($txt);
-				rename($ftmp,$txt);
-			}
-			else touch($txt);
-		}
-		elseif (time() > (@filemtime($ftmp) + 3600)) // efface le fichier tmp si ca fait trop longtemps...
-			@unlink($ftmp);
-	}
-	return TRUE;
-}
-
 function update_Gulliver($base = 'gulliver')
 {
   global $SETTINGS;
+	global $canDownload;
 
 	$web  = $SETTINGS['odir'] . "/$base.sa.web";
 	$web2 = $SETTINGS['odir'] . "/$base.sr.web";
 	$txt  = $SETTINGS['odir'] . "/$base.txt";
-	$expire = 60*60;	// en secondes.
+	$expire = 40*60;	// en secondes.
 	$buffer = '';
 	$ftmp = "$txt.tmp";
 	$ok = FALSE;
+	
+	if ((time() > (@filemtime($web) + $expire)) && $canDownload)  {
+		download_Gulliver();
+		$canDownload = false;
+	}	
 	
 	if ( @filemtime($web) > @filemtime($txt)) {
 	    if  ( $fd = @fopen($ftmp,'x+') )
@@ -728,72 +570,56 @@ function update_Gulliver($base = 'gulliver')
 //////////////////////////
 // $textall = @file_get_contents('http://www.gulliver.it/scialpinismo/');
 // renvoie dans $textall un buffer pret a etre ecrit dans le fichier cache.
+function download_Gulliver( $base = 'gulliver' ) {
+   global $SETTINGS;
+	$web  = $SETTINGS['odir'] . "/$base.sa.web";
+	$web2 = $SETTINGS['odir'] . "/$base.sr.web";
+	$textall = file_get_contents("https://www.gulliver.it/sci-alpinismo/");
+	$fd=@fopen($web,'w');
+	@fwrite($fd,$textall);
+	@fclose($fd);
+	$textall = file_get_contents("https://www.gulliver.it/sci-ripido/");
+	$fd=@fopen($web2,'w');
+	@fwrite($fd,$textall);
+	@fclose($fd);
+}
 function parse_Gulliver(&$textall)
 {
 	// on garde que la partie int?essante.
-	$p1 = strpos($textall,'nome itinerario');
-	$p2 = strpos($textall,'</table>',$p1);
+	$p1 = strpos($textall,'<div class="col results');
+	$p2 = strpos($textall,'<div class="bg-gray-200"',$p1);
 	$textall = substr($textall,$p1,$p2-$p1);
-	$entries = explode('</tr>',$textall);
-	$n = count($entries)-1;
+	$entries = explode('<a',$textall);
+	$n = count($entries);
 	$textall = '';
 
-	for ($i = 2;$i<$n; $i++)
-	{
-		$items = explode('</td>',$entries[$i]);
-    		$nom = explode('</a>', $items[2]);
-    		$nom = trim(strip_tags($nom[0]));
-		$cot = trim(strip_tags($items[4]));
-		$date = trim(strip_tags($items[5]));
-		// recupere l'ID de l'itinéraire (la sortie n'est pas directement disponible...)
-		preg_match('/\/itinerario\/([0-9]+)\//i', $items[2], $regs);	$id = $regs[1];
-		// recupere la region :
-		unset($regs);
-		if (preg_match_all('/\([^\)]+\)/',$items[2], $regs) > 0) {
-			$reg2 = end($regs[0]);
-			$nom = substr($nom, 0, - strlen($reg2) - 1);
-			$reg = 'Italie ' . $reg2;
-		} else {
-			$reg='Italie';
+	for ($i = 1;$i<$n; $i++) {
+		$items = explode('<span',$entries[$i]);
+
+		$date = trim(strip_tags('<span'.$items[1]));
+		preg_match('/([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})/', $date, $regs);
+		$date = sprintf("%04d-%02d-%02d", $regs[3], $regs[2], $regs[1]);		
+		if ($regs[3]!="")	{
+		  	$reg = 'Italie ' . trim(strip_tags('<span'.$items[2]));
+	    	
+	 		$cot = trim(strip_tags($items[4]));
+			if (strlen($cot)>4) {
+				ereg('([0-9]{1}.[0-9]{1})',$cot,$regs);
+				$cot=$regs[1];
+			}
+			unset($regs);
+	
+			preg_match('/href="([^"]*)"/i', $items[0], $regs);
+			$id = $regs[1];
+			unset($regs);
+	
+			$noms = explode('h3',$entries[$i]);
+			$nom = trim(strip_tags('<h3 '.$noms[1].'</h3>'));
+			$textall .= "gulliver $i\n$date $cot\n$nom\n$id\n$reg\n\n";
 		}
-		// interprete la date :
-		preg_match("/([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{2})/", $date, $regs);
-		$date = sprintf("20%02d-%02d-%02d", $regs[3], $regs[2], $regs[1]);
-		$textall .= "gulliver $id\n$date $cot\n$nom\nhttp://www.gulliver.it/itinerario/$id/\n$reg\n\n";
 	}
 }
 
-//////////////////////////
-// $textall = @file_get_contents('http://www.montagneinfo.net/flux/activites.php?NoIDActivite=11');
-// renvoie dans $textall un buffer pret a etre ecrit dans le fichier cache.
-function parse_SNGM(&$textall)
-{
-	$entries = explode('</item>',substr($textall,strpos($textall,'<item>')));
-	$n = count($entries) - 1;
-	$textall = '';
-	for($i = 0; $i< $n; $i++)
-	{
-		$entry = explode('</',$entries[$i]);
-		unset($regs);
-		ereg('>([0-9]{2})/([0-9]{2})/([0-9]{4}) - (.*)',$entry[0],$regs);
-		$date = "{$regs[3]}-{$regs[2]}-{$regs[1]}";
-		$nom = htmlentities($regs[4],ENT_NOQUOTES,'UTF-8');
-		$lien = substr($entry[1],strpos($entry[1],'<link>')+6);
-		$reg = substr($entry[2],strpos($entry[2],'Massifs :')+10);
-		$reg = substr($reg,0,strpos($reg,' Secteurs'));
-		$reg = ucwords(strtolower(trim($reg)));
-		$textall .= "SNGM\n$date\n$nom\n$lien\n$reg\n\n";
-	}
-}
-
-// http://meta.camptocamp.org/outings/query?activity_ids=10&system_id=1&limit=200
-/*   <item><title>Tête Pelouse : Voie Normale</title>
-   		<pubDate>2007-11-26T12:00:00Z</pubDate>
-   		<author>Camptocamp.org (Camptocamp.org)</author>
-   		<description>HautGiffre-AigRouges , 2475m , skirando , PD-/S2 , NW , fr</description>
-   		<link>http://www.camptocamp.org/outings/108464/fr</link>
-   	</item>
-*/
 
 //////////////////////////
 // $textall : contenu de "https://api.camptocamp.org/outings?pl=fr&act=skitouring"
@@ -815,8 +641,10 @@ function parse_Skirando(&$textall, $last_id)
         $name = $outing['locales'][0]['title'];
         $link = 'https://www.camptocamp.org/outings/' . $id;
         $area = c2c_area($outing);
-        $cotation = ""; // TODO get_cotation($outing);
-        $author = $outing['author']['name'];
+		$cotation = "";
+        $cotation = $outing['ski_rating'];
+			if ($cotation == "") {$cotation = "nc";}
+		$author = $outing['author']['name'];
         if ($date < $dlim) break; // not older than one month
         $textall .= "c2c $id\n$date $cotation\n$name\n$link\n$area\n$author\n";
         if ($id > $new_id) $new_id = $id;
@@ -880,6 +708,14 @@ function volo_cot($url,&$parts)
 // $last_id : ne garde que les sorties dont l'id > $last_id
 // renvoie dans $textall un buffer pret a etre ecrit dans le fichier cache.
 //    et en return value : $new_id (l'id le plus recent).
+function download_Volopress( $base = 'volo' ) {
+   global $SETTINGS;
+	$web  = $SETTINGS['odir'] . "/$base.web";
+	$textall = file_get_contents("https://www.volopress.net/spip.php?rubrique2");
+	$fd=@fopen($web,'w');
+	@fwrite($fd,$textall);
+	@fclose($fd);
+}
 function parse_Volopress(&$textall,$last_id)
 {
 // on garde que la partie intéressante.
@@ -930,9 +766,9 @@ function parse_Skitour(&$textall,$last_id)
 	$textall = '';
 
 // extrait l'ID de la derniere sortie.
-//	ereg(',([0-9]+)',$entries[1],$regs);	$new_id = $regs[1];
+	ereg(',([0-9]+)',$entries[1],$regs);	$new_id = $regs[1];
 
-//	if ($new_id > $last_id)		// si on a du nouveau ...
+	if ($new_id > $last_id)		// si on a du nouveau ...
 	{
 		$n=count($entries)-1;
 		for($i=1;$i<$n;$i++)
@@ -967,43 +803,120 @@ function parse_Skitour(&$textall,$last_id)
 	}
 	return $new_id;
 }
+//////////////////////////
+// $textall = @file_get_contents('https://www.gipfelbuch.ch/gipfelbuch/verhaeltnisse');
+// $last_id : ne garde que les sorties dont l'id > $last_id
+// renvoie dans $textall un buffer pret a etre ecrit dans le fichier cache.
+//    et en return value : $new_id (l'id le plus recent).
 
+function download_Gipfelbuch( $base = 'gipfelbuch' ) {
+   global $SETTINGS;
+	$web  = $SETTINGS['odir'] . "/$base.web";
+	$textall = file_get_contents("https://www.gipfelbuch.ch/gipfelbuch/verhaeltnisse");
+	$fd=@fopen($web,'w');
+	@fwrite($fd,$textall);
+	@fclose($fd);
+}
+function parse_Gipfelbuch(&$textall,$last_id)
+{
+	global $dlim;
+// on garde que la partie int?essante.
+	$entries = explode('</tr>',substr($textall,strpos($textall,'<table cellpadding="0" cellspacing')));
+	$textall = '';
+//tableaux de traduction
+	$trad_fr = array("Suisse", "Autriche", "Italie", "France", "Allemagne", "Alpes Vaud./Frib./Bern.", "Alpes Glaronaises", "Grisons", "Alpes tessinoises", "Valais", "Alpes Glaronaises/Uranaises", "Jura", "Suisse autres", "Liechtenstein", "Vorarlberg", "Tirol", "Osttirol", "Salzburg", "Kärnten", "Steiermark", "Ober-Österreich", "Autriche autres", "Val d'Aoste", "Piemont", "Alpi Liguri", "Lombardie", "Trentino - Südtirol", "Veneto", "Friuli-Venezia Giulia", "Italie autres", "Haute Savoie", "Savoie", "Isère", "Alpes du Sud", "Pyrénées", "Corse", "France autres", "Allgäu", "Oberbayern West", "Oberbayern Ost", "Schwarzwald", "Allemagne autres", "Autres régions");
+	$trad_ch = array("Schweiz", "Österreich", "Italien", "Frankreich", "Deutschland", "CH - Waadt/Freib./Berner Alpen", "CH - Glarus - St. Gallen", "CH - Graubünden", "CH - Tessin", "CH - Walliser Alpen", "CH - Zentralschweiz", "CH - Jura", "CH - Andere Region", "FL - Liechtenstein", "A - Vorarlberg", "A - Tirol", "A - Osttirol", "A - Salzburg", "A - Kärnten", "A - Steiermark", "A - Ober-Österreich", "A - Andere Region", "I - Valle d'Aosta", "I - Piemonte", "I - Liguria", "I - Lombardia", "I - Trentino - Südtirol", "I - Veneto", "I - Friuli-Venezia Giulia", "I - Andere Region", "F - Haute Savoie", "F - Savoie", "F - Isère", "F - Alpes du Sud", "F - Pyrenäen", "F - Korsika", "F - Andere Region", "D - Allgäu", "D - Oberbayern West", "D - Oberbayern Ost", "D - Schwarzwald", "D - Andere Region", "Andere Region");
+	$trad_cotfr = array("F", "PD", "AD", "TD", "D",  "ED");
+	$trad_cotch = array("L", "WS", "ZS", "SS", "S",  "AS");
+// extrait l'ID de la derniere sortie.
+	ereg('/([0-9]{6})/',$entries[1],$regs);	$new_id = $regs[1];
+
+	if ($new_id > $last_id)		// si on a du nouveau ...
+	{
+		$n=count($entries)-2;
+		for($i=1;$i<$n;$i++)
+		{
+			$items = explode('</td>',$entries[$i]);
+			$lien = substr($items[0],strpos($items[0],'href="')+6);
+			$lien = substr($lien,0,strpos($lien,'">'));
+// extrait l'ID de la sortie.
+			//$id = strip_tags($items[0]);
+			ereg('/([0-9]{6})/',$lien,$regs);	$id = $regs[1];
+				$nom = trim(strip_tags($items[0]));
+				//$alt = trim(strip_tags($items[2]));
+				$voie = trim(strip_tags($items[1]));
+				$voie = "$nom, $voie";
+				$reg = trim(strip_tags($items[3]));
+				$reg2 = str_replace($trad_ch, $trad_fr, $reg);
+//récupération et traduction de la cotation et traduction
+				$txttoparse = @file_get_contents("https://www.gipfelbuch.ch$lien");
+				$cot = substr($txttoparse,strpos($txttoparse,'SAC_Skiskala.pdf">')+18);
+				$cot = strstr($cot,'</a>', true);
+				$cot = str_replace($trad_cotch, $trad_cotfr, $cot);
+				if (strlen ($cot)>2){ $cot='';}
+//récupération de l'auteur
+				$part = substr($txttoparse,strpos($txttoparse,'<strong>')+8);
+				$part = strstr($part,'</strong>', true);
+				if (strlen ($part)>20){ $part='';}
+				$date = trim(strip_tags($items[8]));
+// interprete la date :
+				ereg ("([0-9]{2}).([0-9]{2}).([0-9]{4})", $date, $regs);
+				$date = "{$regs[3]}-{$regs[2]}-{$regs[1]}";
+// pour etre ecrit plus tard :
+				if ($date < $dlim) break;	// pas plus vieux que 1 mois.
+//Tout ce qui n'est pas ski ne nous intéresse pas
+				if (stristr($lien,'Skitour_Snowboardtour')) {
+				$textall .= "gipfelbuch $id\n$date $cot\n$voie\nhttps://www.gipfelbuch.ch$lien\n$reg2\n$part\n";
+				if ($id > $new_id) $new_id = $id;
+				}
+		}
+	}
+	return $new_id;
+}
 
 //////////////////////////
 // $textall = @file_get_contents('http://www.bivouak.net/index.php?id_sport=1');
 // $last_id : ne garde que les sorties dont l'id > $last_id
 // renvoie dans $textall un buffer pret a etre ecrit dans le fichier cache.
 //    et en return value : $new_id (l'id le plus recent).
-function parse_Bivouak(&$textall,$last_id)
+function download_Bivouak( $base = 'bivouak' ) {
+   global $SETTINGS;
+	$web  = $SETTINGS['odir'] . "/$base.web";
+	$textall = file_get_contents("https://www.bivouak.net/topos/liste_des_sorties.php?id_sport=1");
+	$fd=@fopen($web,'w');
+	@fwrite($fd,$textall);
+	@fclose($fd);
+}
+function parse_Bivouak($textall,$last_id)
 {
 	global $dlim;
 	$cur_month = date('m');	$cur_year = date('Y');
 // on garde que la partie int?essante.
-	$textall = substr($textall,strpos($textall,'titre_dernieres_sorties.gif'));
+	$textall = substr($textall,strpos($textall,'Auteur'));
 	$textall = substr($textall,0,strpos($textall,'</table>'));
 	$entries = explode('</tr>',$textall);
 	$textall = '';
-
 // extrait l'ID de la sortie.
-	ereg('-([0-9]+)-sport-1',$entries[3],$regs);	$new_id = $regs[1];
+	ereg('sortie-([0-9]+)-',$entries[1],$regs);	$new_id = $regs[1];
 	if ($new_id > $last_id)
 	{
 		$n = count($entries)-1;
-		for ($i = 3;$i<$n; $i++)
+		for ($i = 1;$i<$n; $i++)
 		{
 			$items = explode('</td>',$entries[$i]);
 			$start = strpos($items[1],'<a href="..') + 11;
-			$stop = strpos($items[1],'" >',$start);
+			$stop = strpos($items[1],'">',$start);
 			$lien = substr($items[1],$start,$stop - $start);
 // extrait l'ID de la sortie.
-			ereg('-([0-9]+)-sport-1',$lien,$regs);		$id = $regs[1];
+			ereg('sortie-([0-9]+)-',$lien,$regs);		$id = $regs[1];
+			//print($id); print('     '); print($last_id); print('\n');
 			if ($id > $last_id)
 			{
 				$date = trim(strip_tags($items[0]));
 				$nom = trim(strip_tags($items[1]));
 				$reg = trim(strip_tags($items[2]));
-				$cot = trim(strip_tags($items[3]));
-				$part = trim(strip_tags($items[4]));
+				$cot = trim(strip_tags($items[5]));
+				$part = trim(strip_tags($items[7]));
 // interprete la date :
 				ereg ("([0-9]{2}).([0-9]{2})", $date, $regs);
 				if (($regs[2]) > $cur_month) {
@@ -1017,58 +930,19 @@ function parse_Bivouak(&$textall,$last_id)
 			}
 		}
 	}
+	$fd = @fopen("./data/bivouak.txt",'a'); @flock($fd,LOCK_EX); @fwrite($fd,$textall); @fclose($fd);
 	return $new_id;
 }
-
-//////////////////////////
-// $textall = @file_get_contents('http://www.ohm-chamonix.com/HIV/OHMCourListe.php');
-// $last_id : ne garde que les sorties dont l'id > $last_id
-// renvoie dans $textall un buffer pret a etre ecrit dans le fichier cache.
-//    et en return value : $new_id (l'id le plus recent).
-function parse_OHM(&$textall,$last_id)
-{
-	global $dlim;
-// on garde que la partie int?essante.
-	$textall = substr($textall,strpos($textall,'<table class="cahierBG"'));
-	$start = strpos($textall,'<tr>');
-	$stop = strpos($textall,'</table>');
-	$textall = substr($textall,$start,$stop-$start);
-	$entries = explode('<tr>',$textall);
-	$n = count($entries);
-	$textall = '';
-	
-	$new_id = $last_id;
-	for ($i = 1;$i<$n; $i++)
-	{
-		$items = explode('</td>',$entries[$i]);
-		if (strpos($items[2],'ski') !== FALSE)
-		{	// skirando ? on affiche !
-			$date = trim(strip_tags($items[0]));
-			$part = trim(strip_tags($items[3]));
-			$nom = trim(strip_tags($items[1]));
-// recupere l'ID :
-			eregi('course=([0-9]+)',$items[1],$regs);	$id = $regs[1];
-			if ( ($id > $last_id) && ($date >= $dlim) )
-			{	// r?up?e le massif :
-				$lien = "http://www.ohm-chamonix.com/fiche.php?id=01&course=$id&ling=Fr";
-				$detail = @file_get_contents($lien, "r");
-				$detail = substr($detail,strpos($detail,'<table class="cahierBG"'));
-				$detail = substr($detail,strpos($detail,'</tr>'),strpos($detail,'</table>'));
-				$det_it = explode('</td>',$detail);
-				$reg = ucwords(strtolower(trim(strip_tags($det_it[1]))));
-				$up = trim(strip_tags($det_it[12]));
-				$dn = trim(strip_tags($det_it[13]));
-				$textall .= "OHM $id\n$date\n$nom ($up / $dn)\n$lien\n$reg\n$part\n";
-				if ($id > $new_id) $new_id = $id;
-			}
-		}
-	}
-	return $new_id;
-}
-
 
 /////////// RESET FUNCTIONS /////////
-
+function download_Skitour( $base = 'skitour' ) {
+   global $SETTINGS;
+	$web  = $SETTINGS['odir'] . "/$base.web";
+	$textall = @file_get_contents('http://www.skitour.fr/topos/dernieres-sorties.php?nbr=500');
+	$fd=@fopen($web,'w');
+	@fwrite($fd,$textall);
+	@fclose($fd);
+}
 function reset_Skitour($nread = 500, $base = 'skitour' )
 {
   global $SETTINGS;
@@ -1109,7 +983,14 @@ function reset_Skitour($nread = 500, $base = 'skitour' )
 //		cleanup_cache($txt);
 	}
 }
-
+function download_Skirando( $base = 'c2c' ) {
+   global $SETTINGS;
+	$web  = $SETTINGS['odir'] . "/$base.web";
+	$textall = file_get_contents("https://api.camptocamp.org/outings?act=skitouring&pl=fr&limit=500");
+	$fd=@fopen($web,'w');
+	@fwrite($fd,$textall);
+	@fclose($fd);
+}
 function reset_Skirando($nread = 120, $base = 'c2c' )
 {
   global $SETTINGS;
@@ -1118,15 +999,40 @@ function reset_Skirando($nread = 120, $base = 'c2c' )
 	$last = $SETTINGS['odir'] . "/$base.last";
 	$ftmp = "$txt.tmp";
 
-	echo "<p>Indexing camptocamp.org ...";
 	if ( $fd = @fopen($ftmp,'x') )		// pas d'autre tentative ?
 	{
+		echo "<p>Indexing camptocamp.org ...";
 		fclose($fd);
-//		$textall = file_get_contents('http://meta.camptocamp.org/outings/query?activity_ids=10&system_id=1&limit=500');
-		$textall = file_get_contents($SETTINGS['odir'] . "/$base.web");
-		echo $textall;
+		//$textall = file_get_contents($SETTINGS['odir'] . "/$base.web");
+		$textall = file_get_contents("https://api.camptocamp.org/outings?act=skitouring&pl=fr&limit=500");
 		$new_id = 0;
 		$new_id = parse_Skirando($textall,$new_id);
+		$fd=@fopen($ftmp,'a');
+		@fwrite($fd,$textall);
+		@fclose($fd);
+		$fd = @fopen($last,'w');	@fwrite($fd,$new_id);	@fclose($fd);
+		@unlink($txt);
+		rename($ftmp,$txt);
+		echo ' done.</p>';
+	}
+}
+
+function reset_Gipfelbuch($base = 'gipfelbuch' )
+{
+  global $SETTINGS;
+
+	$txt  = $SETTINGS['odir'] . "/$base.txt";
+	$last = $SETTINGS['odir'] . "/$base.last";
+	$ftmp = "$txt.tmp";
+
+	if ( $fd = @fopen($ftmp,'x') )		// pas d'autre tentative ?
+	{
+		echo "<p>Indexing gipfelbuch ...";
+		fclose($fd);
+		$textall = file_get_contents($SETTINGS['odir'] . "/$base.web");
+		$new_id = 0;
+		$new_id = parse_Gipfelbuch($textall,$new_id);
+		//print ($new_id);
 		$fd=@fopen($ftmp,'a');
 		@fwrite($fd,$textall);
 		@fclose($fd);
