@@ -77,79 +77,70 @@
 <head>
 <title>Meta-Skirando : Mes préférences</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="initial-scale=1">
 <link href="style.css" rel="stylesheet" type="text/css">
-<link rel="canonical" href="http://metaskirando.camptocamp.org/prefs.php" />
+<link rel="canonical" href="http://www.metaskirando.ovh/prefs.php" />
 </head>
 <body>
 
 <?php include 'menu.inc'; ?>
 
-<h2>Mes Régions :</h2>
-
-<p><i>Pour définir une région, il faut lui donner un nom et spécifier un filtre. Le filtre
-est une expression régulière, qui n'a pas besoin d'être un mot complet. Pour rechercher plusieurs région, il suffit de les séparer par "</i>|<i>".
-Le point "</i>.<i>" désigne n'importe quel caractère et est recommandé à la place de caractères accentués.<br>
-Exemples:</i><br>
-<i>* On peut définir la région "</i>Dauphiné<i>" avec pour filtre "</i>Belledonne|D.voluy|Vercors|Chartreuse|Taillefer|.crins<i>".</i><br>
-<i>* Pour le Beaufortain, étant donné les multiples orthographes, le filtre "</i>Beaufort<i>" fait l'affaire.</i><br>
-<i>Les régions sont enregistrées dans des cookies pour être disponible lors de vos prochaines visites. On peut tester les filtres avant de les enregistrer à l'aide de la recherche "Kick Zeurch".</i>
-</p>
-
 <form method='post'>
-<center>
-<table style='padding:5px'>
-<tr class='new'><td><b>Nom de la région</b></td><td><b>Filtre correspondant</b></td><td></td></tr>
-
-<?php
-	if (isset($region))	{
-		foreach ( $region as $name => $filter )
-		{
-			echo "<tr class='new'><td>$name</td><td><input type=text size=40 name=\"region[$name]\" value=\"$filter\"></td><td><a href='prefs.php?delete=$name'>supprimer</a></td></tr>\n";
+	<h2>Préférences</h2>
+	
+	<p>
+		<input type=checkbox name="raide" id="raide" <?php if (isset($raide)) echo 'checked'; ?>/>
+		<label for='raide'>Afficher uniquement la pente raide par défaut (<i>à partir de la difficulté 4.1 ou D-, et volopress.fr</i>).</label>
+	</p>
+	<p>
+		<input type=checkbox name="myregs" id="myregs" <?php if (isset($myregs)) echo 'checked'; ?>/>
+		<label for="myregs">Afficher les dernières sorties uniquement dans mes régions (et pas toutes les sorties des Alpes ou du Pakistan :)</label>
+	</p>	
+	<h2>Mes Régions</h2>
+	<p>Vous avez défini les régions suivantes :</p>
+	<?php
+		if (isset($region))	{
+			foreach ( $region as $name => $filter )
+			{
+				echo "<div class='mr'>";
+				echo "<div class='mrd'><a href='prefs.php?delete=$name'>X</a></div>";
+				echo "<div class='mrn'>$name</div>";
+				$label = str_replace("|", " | ", $filter);
+				echo "<div class='mri'>$label</div>";
+				echo "</div>\n";
+			}
 		}
-	}
-?>
-
-<tr class="new"><td valign='top'><input typr=text size=20 name='new_name'></td>
-	<td><input typr=text size=40 name='new_filter'><br>
-	ou crérer à partir de région existantes :<br>
-<select size="8" name="filtA[]" multiple="multiple">
-<?php	
-	if (isset($_COOKIE['region']))
-	{
-		foreach ( $_COOKIE['region'] as $nom => $key )
-			echo "<option value=\"$key\">* $nom </option>\n";
-	}
-	$r = count($regs);
-	for ($i=0;$i<$r;$i++)
-	{
-		$nom = $regs[$i]['nom'];
-		$key = $regs[$i]['key'];
-		echo "<option value=\"$key\">$nom </option>\n";
-	}
-?>
-</select><br>(<i>selection multiple avec la touche ctrl</i>)
-	</td> <td></td></tr>
-</table>
-</center>
-
-<h2>Préférences :</h2>
-
-<center>
-<table>
-<tr><td>
-	<input type=checkbox name="raide" <?php if (isset($raide)) echo 'checked'; ?>>
-</td><td>
-	Afficher uniquement la pente raide par défaut (<i>à partir de la difficulté 4.1 ou D-, et volopress.fr</i>).
-</td></tr>
-<tr><td>
-	<input type=checkbox name="myregs" <?php if (isset($myregs)) echo 'checked'; ?>>
-</td><td>
-	Afficher les dernières sorties uniquement dans mes régions <i>et ne soyez plus parasité par les sorties de Nouvelle Zélande ou du Pakistan ;-)</i>
-</td></tr>
-</table>
-<br>
-<INPUT TYPE=submit NAME="save" VALUE="Oui, c'est ça !">
-</center>
+	?>
+	<p><br/>Pour définir une nouvelle région, indiquer un nom et spécifier un filtre ci-dessous.</p>
+	<div class="mr">
+		<div class="mrnx">
+			<label for="new_name">Nom</label><br/>
+			<input typr=text size=6 name='new_name' id='new_name'/>	
+		</div>
+		<div class="mrfx">
+			<label for="new_filter">Filtre</label>
+			<input typr='text' size='10' name='new_filter' id='new_filter' style="width: 100%;"/>
+			<br>ou crérer à partir de région existantes :<br>
+			<select size="8" name="filtA[]" multiple="multiple" style="width: 100%;">
+			<?php	
+				if (isset($_COOKIE['region']))
+				{
+					foreach ( $_COOKIE['region'] as $nom => $key )
+						echo "<option value=\"$key\">* $nom </option>\n";
+				}
+				$r = count($regs);
+				for ($i=0;$i<$r;$i++)
+				{
+					$nom = $regs[$i]['nom'];
+					$key = $regs[$i]['key'];
+					echo "<option value=\"$key\">$nom </option>\n";
+				}
+			?>
+			</select><br>(<i>selection multiple avec la touche ctrl</i>)
+		</div>
+	</div>
+	<p>Le filtre est une expression régulière, pouvant utiliser '|' (opérateur 'ou') et '.' (un caractère quelconque, recommandé à la place de caractères accentués). <u>Exemples</u> : "<i>D.voluy|.crins</i>", "<i>Beaufort</i>" (=tout ce qui contient du Beaufort).<br/>Vous pouvez tester les filtres sur la page d'accueil avant de les enregistrer ici.</p>
+	<p style="text-align: center;"><INPUT TYPE=submit NAME="save" VALUE="Oui, c'est ça !"/></p>
 </form>
 
 
