@@ -4,6 +4,6 @@
 <Description>www.metaskirando.ovh : le moteur de recherche du ski de rando</Description>
 <InputEncoding>utf-8</InputEncoding>
 <Image width="64" height="64" type="image/x-icon">http://www.metaskirando.ovh/favicon.ico</Image>
-<Url type="text/html" method="GET" template="http://metaskirando.camptocamp.org/?str={searchTerms}"></Url>
+<Url type="text/html" method="GET" template="http://www.metaskirando.ovh/?str={searchTerms}"></Url>
 <moz:SearchForm>http://www.metaskirando.ovh</moz:SearchForm>
 </OpenSearchDescription>
