@@ -22,7 +22,7 @@
 		<u>Sites index&eacute;s :</u> <a href="http://www.bivouak.net/">bivouak.net</a>, 
 			<a target="autres" href="http://www.camptocamp.org/">camptocamp.org (c2c)</a>,
 			<a target="autres" href="http://www.gulliver.it/">gulliver.it</a>, 
-			<a target="autres" href="http://www.skitour.fr/">Skitour</a>,
+			<a target="autres" href="https://skitour.fr/">Skitour</a>,
 			<a target="autres" href="http://www.volopress.net/">Volopress</a>.
 			<a target="autres" href="https://www.gipfelbuch.ch">Gipfelbuch.ch</a>.
 		<br>

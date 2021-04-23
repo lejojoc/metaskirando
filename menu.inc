@@ -19,7 +19,7 @@
 <span class="menu"><a href="Nivo.php" title="Nivoses et Météo">Nivo & Météo</a></span>
 <span class="menu"><a target="autres" href="http://www.skitour.fr/webcams/" title="Webcams de stations de skis (skitour.fr)">Webcams</a></span>
 <span class="menu"><a href="diffusion.php" title="Diffuser l'info sur votre site !">Diffusion</a></span>
-<span class="menu"><a href="prefs.php" title="D&eacute;finir mes pr&eacute;f&eacute;rences et mes régions">Pr&eacute;f.</a></span>
+<span class="menu"><a href="prefs.php" title="D&eacute;finir mes pr&eacute;f&eacute;rences et mes régions">Préférences</a></span>
 </div>
 
 <div style="position: absolute; top: 0px; right: 0px;z-index: -1;"><img src="gfx/surf_small2.png"></div>

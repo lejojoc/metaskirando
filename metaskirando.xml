@@ -1,9 +1,9 @@
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
                        xmlns:moz="http://www.mozilla.org/2006/browser/search/">
 <ShortName>Metaskirando</ShortName>
-<Description>www.metaskirando.ovh : le moteur de recherche du ski de rando</Description>
+<Description>le moteur de recherche du ski de rando</Description>
 <InputEncoding>utf-8</InputEncoding>
 <Image width="64" height="64" type="image/x-icon">http://www.metaskirando.ovh/favicon.ico</Image>
-<Url type="text/html" method="GET" template="http://www.metaskirando.ovh/?str={searchTerms}"></Url>
-<moz:SearchForm>http://www.metaskirando.ovh</moz:SearchForm>
+<Url type="text/html" method="GET" template="http://http://www.metaskirando.ovh/?str={searchTerms}"></Url>
+<moz:SearchForm>http://metaskirando.camptocamp.org</moz:SearchForm>
 </OpenSearchDescription>

@@ -83,15 +83,20 @@ p {
 div.menu {
 	text-align: center;
 	width:100%;
-   font-size: 80%;
-   text-align: center;
-   margin-top: 8px;
+   font-size: 0.8em;
+   display: flex;
+   justify-content: center;
 }
 
 span.menu {
 	border: 1px solid ;
-	padding: 4px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	background: yellow;
+	max-width: 90px;
+	flex: 1;
+	margin-left: 1px;
+	margin-right: 1px;
 }
 span.yt {
 	color: #006600;

@@ -245,7 +245,7 @@ function load_All( &$sorties ) {
 
 }
 
-/// www.skitour.fr
+/// skitour.fr
 function update_Skitour($base = 'skitour')
 {
   	global $SETTINGS;
@@ -461,10 +461,10 @@ function update_Bivouak($base = 'bivouak')
 	if ((time() > (@filemtime($web) + $expire)) && $canDownload)  {
 		download_Bivouak();
 		$canDownload = false;
-		echo "<p style='text-align:right;font-style:italic;font-size:0.7em'>";
+		echo "<p style='font-style:italic;font-size:0.7em'>";
 		echo "Données mises à jour le ".date('D j F Y à G:i:s',time())."</p>";	
 	} else {
-		echo "<p style='text-align:right;font-style:italic;font-size:0.7em'>";
+		echo "<p style='font-style:italic;font-size:0.7em'>";
 		echo "Données mises à jour le ".date('D j F Y à G:i:s',@filemtime($web))."</p>";	
 	}
 	$textall = @file_get_contents($web);
@@ -754,7 +754,7 @@ function parse_Volopress(&$textall,$last_id)
 
 
 //////////////////////////
-// $textall = @file_get_contents('http://www.skitour.fr/topos/?nbr=50&p=1');
+// $textall = @file_get_contents('https://skitour.fr/api/sorties?a=2022');
 // $last_id : ne garde que les sorties dont l'id > $last_id
 // renvoie dans $textall un buffer pret a etre ecrit dans le fichier cache.
 //    et en return value : $new_id (l'id le plus recent).
@@ -762,41 +762,35 @@ function parse_Skitour(&$textall,$last_id)
 {
 	global $dlim;
 // on garde que la partie int?essante.
-	$entries = explode('</tr>',substr($textall,strpos($textall,'<table class="topos">')));
+	$entries = explode('</tr>',substr($textall,strpos($textall,'<tbody id="tableTopo">')));
 	$textall = '';
 
 // extrait l'ID de la derniere sortie.
-	ereg(',([0-9]+)',$entries[1],$regs);	$new_id = $regs[1];
-
+	ereg('([0-9]+)',$entries[1],$regs);	$new_id = $regs[1];
 	if ($new_id > $last_id)		// si on a du nouveau ...
 	{
 		$n=count($entries)-1;
 		for($i=1;$i<$n;$i++)
 		{
 			$items = explode('</td>',$entries[$i]);
-			$lien = substr($items[1],strpos($items[1],'<a href="..')+11);
+			$lien = substr($items[2],strpos($items[2],'<a href="')+9);
 			$lien = substr($lien,0,strpos($lien,'">'));
-// extrait l'ID de la sortie.
-//			$id = strip_tags($items[0]);
-			ereg(',([0-9]+)',$lien,$regs);	$id = $regs[1];
+			ereg('([0-9]+)',$lien,$regs);	$id = $regs[1];
 			if ($id > $last_id)
 			{
-				$nom = trim(strip_tags($items[1]));
-				$alt = trim(strip_tags($items[2]));
-				$voie = trim(strip_tags($items[3]));
-				if (substr($voie,0,8) == 'Variante') {
-					$voie = substr($voie, 11);
-				} else $voie = "$nom, $voie";
-				$reg = trim(strip_tags($items[4]));
+				$nom = trim(strip_tags($items[8]));
+				$alt = trim(strip_tags($items[5]));
+				$voie = trim(strip_tags($items[2]));
+				$reg = trim(strip_tags($items[3]));
 				$cot = trim(strip_tags($items[6]));
-				$part = trim(strip_tags($items[7]));
-				$date = trim(strip_tags($items[8]));
+				$part = trim(strip_tags($items[8]));
+				$date = trim(strip_tags($items[1]));
 // interprete la date :
 				ereg ("([0-9]{2}).([0-9]{2}).([0-9]{2})", $date, $regs);
 				$date = "20{$regs[3]}-{$regs[2]}-{$regs[1]}";
 // pour etre ecrit plus tard :
 				if ($date < $dlim) break;	// pas plus vieux que 1 mois.
-				$textall .= "skitour $id\n$date $cot\n$voie\nhttp://www.skitour.fr$lien\n$reg\n$part\n";
+				$textall .= "skitour $id\n$date $cot\n$voie\nhttp://skitour.fr$lien\n$reg\n$part\n";
 				if ($id > $new_id) $new_id = $id;
 			}
 		}
@@ -938,7 +932,16 @@ function parse_Bivouak($textall,$last_id)
 function download_Skitour( $base = 'skitour' ) {
    global $SETTINGS;
 	$web  = $SETTINGS['odir'] . "/$base.web";
-	$textall = @file_get_contents('http://www.skitour.fr/topos/dernieres-sorties.php?nbr=500');
+	
+	$url = "https://skitour.fr/sorties";
+	$options = array(
+	  'https'=>array(
+		  'method'=>"GET",
+		  'header'=>"cle: NL4UeRQausVg4etQD7f21KckjCvVL1Kn"
+	 	)
+	);
+	$context = stream_context_create($options);
+	$textall = file_get_contents($url, false, $context);	
 	$fd=@fopen($web,'w');
 	@fwrite($fd,$textall);
 	@fclose($fd);
@@ -955,15 +958,15 @@ function reset_Skitour($nread = 500, $base = 'skitour' )
 	if ( $fd = @fopen($ftmp,'x') )		// pas d'autre tentative ?
 	{
 		fclose($fd);
-		$textall = @file_get_contents("http://www.skitour.fr/topos/dernieres-sorties.php?nbr=$nread");
-		$retry = 0;
-		while (($textall === FALSE)&&($retry < 3))	// echec de temps en temps, r?ssaye 3 fois.
-		{
-			echo ' retry...';
-			sleep(2);
-			$textall = @file_get_contents('http://www.skitour.fr/topos/dernieres-sorties.php?nbr=$nread');
-			$retry++;
-		}
+		$url = "https://skitour.fr/sorties";
+		$options = array(
+		  'https'=>array(
+			  'method'=>"GET",
+			  'header'=>"cle: NL4UeRQausVg4etQD7f21KckjCvVL1Kn"
+		 	)
+		);
+		$context = stream_context_create($options);
+		$textall = file_get_contents($url, false, $context);	
 		if ($textall !== FALSE)
 		{
 			$new_id = parse_Skitour($textall,0);
